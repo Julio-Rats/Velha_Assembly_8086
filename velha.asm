@@ -8,7 +8,7 @@ data segment
 	colors   			db 0Fh, 0Fh, 0Fh
 	player   			db 0
 	win      			db 0
-	str_name 			db "Nome do Jogador: $"
+	str_name			db "Nome do Jogador: $"
 	string_inval	db "Nome de Jogador invalido!$"
 	str_skin 			db "Escolha seu simbolo: $"
 	simb_igual   	db "Simbolo igual do outro jogador!$"
@@ -32,12 +32,12 @@ data segment
 	              db "6 - Marrom",  0Ah,0Dh,0Ah
 	              db "Escolha a cor: $"
 
-	newGameQuest  db "Jogar novamente ? (S ou s para sim, qualquer tecla para não ou...",0Dh,0Ah
+	newGameQuest  db "Jogar novamente ? (S ou s para sim, qualquer tecla para nï¿½o ou...",0Dh,0Ah
 								db " M ou m, para voltar ao menu): $"
 	welcome       db "Jogo da Velha --- By Oz Elentok",0Dh,0Ah
 	              db "Modificado por Julio Cesar, Caio Melo e Thales Lima$"
 
-  newGamedraw   db "Aceita revanche ? (S para sim, qualquer tecla para não ou...",0Dh,0Ah
+  newGamedraw   db "Aceita revanche ? (S para sim, qualquer tecla para nï¿½o ou...",0Dh,0Ah
 								db " M para voltar ao menu): $"
 	tieMessage   	db "Ocorreu uma velha!$"
 	winMessage   	db "O jogador vitorioso foi $"
@@ -195,26 +195,26 @@ start:
     	call getChar
     	cmp AL, 's'; play again if 's' or 's' is pressed
     	je newGame
-    	
+
     	cmp AL, 'S'
     	je newGame
-    	
+
 		cmp AL, 'M'; play again if 's' or 's' is pressed
     	je chama_memSet
-    	    	
+
     	cmp AL, 'm'
     	je chama_memSet
-    	
+
     	jmp sof
 
 	sof:
     	mov AX, 4c00h
     	int 21h
-                
+
 chama_memSet:
     call memset
-    jmp   print_menu                
-                
+    jmp   print_menu
+
 ;-------------------------------------------;
 ;
 ; Seta AH = 01h
@@ -248,13 +248,13 @@ ret
 ;-------------------------------------------;
 ;
 ;	Limpa tela e cria tela
-; AH = 0
+; AX = 3h
 ;
 clearScreen:
 		;mov AH, 0Fh
 		;int 10h
-		mov AX, 0003h
-		int 10h
+		mov  AX,  3h
+		int  10h
 ret
 
 ;-------------------------------------------;
@@ -375,7 +375,7 @@ diagonalRtL:
 		add  bx, 2	;grid[4] ---> grid[6]
 		cmp  AL, [bx]
 		jne  endCheckDiagonal
-		mov  win, 1       
+		mov  win, 1
 		call printa_ds_vitoriosa
 		endCheckDiagonal:
 ret
@@ -391,7 +391,7 @@ checkRows:
 		inc  bx		;grid[1] ---> grid[2]
 		cmp  AL, [bx]
 		jne  secondRow
-		mov  win, 1   
+		mov  win, 1
 		mov  AL, 0h
 		call printa_linha_vitoriosa
 ret
@@ -438,7 +438,7 @@ CheckColumns:
 		add  bx, 3	;grid[3] ---> grid[6]
 		cmp  AL, [bx]
 		jne  secondColumn
-		mov  win, 1      
+		mov  win, 1
 		mov  AL, 0h
 		call printa_coluna_vitoriosa
 ret
@@ -476,7 +476,7 @@ ret
 
 ;-------------------------------------------------------;
 ;																												;
-;             	   IMPLEMENTACOES												;
+;             	   IMPLEMENTAÃ‡Ã•ES												;
 ;																												;
 ;-------------------------------------------------------;
 ;
@@ -515,7 +515,7 @@ printGrid:
 
 		mov  AL, '|'					; Separador de colunas
 	  mov  BL, colors   		; Seta cor do tabuleiro
-		call putCharColor				; Printa separador com cor
+		call putCharColor			; Printa separador com cor
 		call moveCursorFront	; Desloca cursor
 
 		add  DL, 01h					; Incrimenta DL
@@ -913,104 +913,104 @@ moveCursorFront:
    int  10h				; Seta cursor nessa nova posicao
    pop  CX
    pop  DX
-ret         
+ret
 
 ;-------------------------------------------------------;
 ;
     ;   Printa a linha vitoriosa
-;       recebe AL 
+;       recebe AL
 ;
-printa_linha_vitoriosa:    
-    mov  BX, SI 
+printa_linha_vitoriosa:
+    mov  BX, SI
     push CX
     mov  CX, 3h
     mov  AH, 0h
-    add  BX, AX 
-    
+    add  BX, AX
+
     print_linha:
     mov  [BX], '-'
     add  BX, 1h
-    loop print_linha 
-    pop  CX        
+    loop print_linha
+    pop  CX
 ret
 
 ;-------------------------------------------------------;
 ;
 ;   Printa a coluna vitoriosa
-;       recebe AL 
+;       recebe AL
 ;
-printa_coluna_vitoriosa:    
-    mov  BX, SI 
+printa_coluna_vitoriosa:
+    mov  BX, SI
     push CX
     mov  CX, 3h
     mov  AH, 0h
-    add  BX, AX 
-    
+    add  BX, AX
+
     print_coluna:
     mov  [BX], '|'
     add  BX, 3h
     loop print_coluna
-    pop  CX    
+    pop  CX
 ret
 
 ;-------------------------------------------------------;
 ;
-;   Printa a diagonal principal 
-;       recebe AL 
+;   Printa a diagonal principal
+;       recebe AL
 ;
-printa_dp_vitoriosa:    
-    mov  BX, SI 
+printa_dp_vitoriosa:
+    mov  BX, SI
     push CX
     mov  CX, 3h
     mov  AX, 0h
-    add  BX, AX 
-    
+    add  BX, AX
+
     print_dp:
     mov  [BX], '\'
     add  BX, 4h
     loop print_dp
-    pop  CX    
-ret   
-   
+    pop  CX
+ret
+
 ;-------------------------------------------------------;
 ;
-;   Printa a diagonal segundaria 
-;       recebe AL 
+;   Printa a diagonal segundaria
+;       recebe AL
 ;
-printa_ds_vitoriosa:    
-    mov  BX, SI 
+printa_ds_vitoriosa:
+    mov  BX, SI
     push CX
     mov  CX, 3h
     mov  AX, 2h
-    add  BX, AX 
-    
+    add  BX, AX
+
     print_ds:
     mov  [BX], '/'
     add  BX, 2h
     loop print_ds
-    pop  CX    
-ret   
+    pop  CX
+ret
 
 
 ;-------------------------------------------------------;
 ;
-;   
-;   seta uma regiao de memoria 
-;   
+;
+;   seta uma regiao de memoria
+;
 memset:
     push  DS
     mov   AX, 0B80h
-    mov   DS, AX     
+    mov   DS, AX
     mov   CX, 01E0h
     mov   BX, 500h
-    
-    set_mem:     
-    mov   [BX], 0h   
+
+    set_mem:
+    mov   [BX], 0h
     add   BX,   1h
     loop  set_mem
-    
+
     pop   DS
 ret
-   
+
 ends
 end start
